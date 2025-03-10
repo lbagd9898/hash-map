@@ -1,7 +1,9 @@
 function HashMap() {
-  const capacity = 1;
-  const map = [];
-  const keys = [];
+  let capacity = 14;
+  const loadFactor = 0.75;
+  let map = new Array(capacity).fill(null);
+  let keys = [];
+  let values = [];
 
   //takes key and produces hash code and modulo function to create an index within 0 and capacity - 1
   let hash = (key) => {
@@ -18,6 +20,7 @@ function HashMap() {
   let set = (key, value) => {
     let code = hash(key);
     let node = Node(key, value);
+    values.push(value);
     // if there is no node already in bucket
     if (map[code] == undefined) {
       map[code] = [node];
@@ -31,6 +34,18 @@ function HashMap() {
       map[code][map[code].length - 1].nextNode = node;
       map[code].push(node);
       keys.push(key);
+    }
+    let size = showEntries().length;
+    console.log(size);
+    if (size > capacity * loadFactor) {
+      console.log("yes");
+      capacity = capacity * 2;
+      let newMap = new Array(capacity).fill(null);
+      for (let i = 0; i < map.length; i++) {
+        newMap[i] = map[i];
+      }
+      map = newMap;
+      console.log(map);
     }
   };
 
@@ -75,7 +90,49 @@ function HashMap() {
     }
   };
 
-  return { hash, set, map, get, has, remove };
+  let length = () => {
+    return keys.length;
+  };
+
+  let clear = () => {
+    map = [];
+    keys = [];
+    return;
+  };
+
+  let showKeys = () => {
+    return keys;
+  };
+
+  let showValues = () => {
+    return values;
+  };
+
+  let showEntries = () => {
+    const entries = [];
+    for (let i = 0; i < map.length; i++) {
+      if (map[i] != undefined) {
+        for (let j = 0; j < map[i].length; j++) {
+          entries.push([map[i][j].key, map[i][j].value]);
+        }
+      }
+    }
+    return entries;
+  };
+
+  return {
+    hash,
+    set,
+    map,
+    get,
+    has,
+    remove,
+    length,
+    clear,
+    showKeys,
+    showValues,
+    showEntries,
+  };
 }
 
 //creates a new node for each entry including key, value, and nextnode functionality to allow for linked lists at collisions
@@ -84,8 +141,16 @@ function Node(key, value, nextNode = null) {
 }
 
 const test = HashMap();
-test.set("abc", "one");
-test.set("acb", "two");
-test.set("bac", "three");
-test.remove("acb");
+test.set("apple", "red");
+test.set("banana", "yellow");
+test.set("carrot", "orange");
+test.set("dog", "brown");
+test.set("elephant", "gray");
+test.set("frog", "green");
+test.set("grape", "purple");
+test.set("hat", "black");
+test.set("ice cream", "white");
+test.set("jacket", "blue");
+test.set("kite", "pink");
+test.set("lion", "golden");
 console.log(test.map);
