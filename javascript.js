@@ -1,5 +1,5 @@
 function HashMap() {
-  let capacity = 14;
+  let capacity = 16;
   const loadFactor = 0.75;
   let map = new Array(capacity).fill(null);
   let keys = [];
@@ -35,8 +35,8 @@ function HashMap() {
       map[code].push(node);
       keys.push(key);
     }
+    //test whether bucket has reached load factor to expand buckets (double them)
     let size = showEntries().length;
-    console.log(size);
     if (size > capacity * loadFactor) {
       console.log("yes");
       capacity = capacity * 2;
@@ -90,24 +90,30 @@ function HashMap() {
     }
   };
 
+  //returns length of hash map (filled buckets)
   let length = () => {
     return keys.length;
   };
 
+  //clears hashmap
   let clear = () => {
     map = [];
     keys = [];
+    values = [];
     return;
   };
 
+  //returns array of all keys
   let showKeys = () => {
     return keys;
   };
 
+  //returns array of all values
   let showValues = () => {
     return values;
   };
 
+  //returns array containing arrays of each key value pair
   let showEntries = () => {
     const entries = [];
     for (let i = 0; i < map.length; i++) {
